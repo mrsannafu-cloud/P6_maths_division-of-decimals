@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>六年級數學：小數除法可愛互動溫習站 | 香港教育局課程</title>
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Google Fonts：Zen Maru Gothic（日系圓體）、Noto Sans TC 與 Fredoka（圓潤數字） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+  <!-- 引入 Font Awesome 圖示 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Zen Maru Gothic"', '"Noto Sans TC"', 'sans-serif'],
+            mono: ['"Fredoka"', '"Zen Maru Gothic"', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              cream: '#FFFDF7',
+              pink: '#FF8FA3',
+              pinkLight: '#FFE5EC',
+              pinkDark: '#E05773',
+              mint: '#74C69D',
+              mintLight: '#E8F8F0',
+              mintDark: '#2D6A4F',
+              yellow: '#FFD166',
+              yellowLight: '#FFF6DB',
+              sky: '#8ECAE6',
+              skyLight: '#EBF7FD',
+              skyDark: '#219EBC',
+              cocoa: '#4A3B32',
+              cocoaLight: '#7A685D',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FFFDF7;
+      background-image: radial-gradient(#FFE5EC 1.5px, transparent 1.5px), radial-gradient(#E8F8F0 1.5px, #FFFDF7 1.5px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+      color: #4A3B32;
+      font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+      font-size: 19px; /* 基礎字體放大至 19px 照顧小學生閱讀 */
+      line-height: 1.75;
+    }
+
+    /* 日系可愛糖果立體按鈕效果 */
+    .kawaii-btn {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 5px 0 rgba(74, 59, 50, 0.16);
+    }
+    .kawaii-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 rgba(74, 59, 50, 0.18);
+    }
+    .kawaii-btn:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 rgba(74, 59, 50, 0.16);
+    }
+
+    /* 日系手繪虛線卡片 */
+    .kawaii-card {
+      background-color: #FFFFFF;
+      border: 3px solid #F3E5D8;
+      border-radius: 2rem;
+      box-shadow: 0 8px 20px -6px rgba(74, 59, 50, 0.08);
+    }
+
+    /* 直式除法專用特大等寬排版樣式 */
+    .math-grid {
+      font-family: 'Fredoka', 'Zen Maru Gothic', monospace;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.18em;
+    }
+    .division-bracket {
+      border-top: 3.5px solid currentColor;
+      border-left: 3.5px solid currentColor;
+      border-top-left-radius: 16px;
+      padding-top: 3px;
+      padding-left: 12px;
+    }
+
+    /* 香港教科書標準直式位值格網系統（嚴格逐格對齊個位、十分位、百分位及小數點） */
+    .ld-grid {
+      display: inline-grid;
+      font-family: 'Fredoka', 'Zen Maru Gothic', monospace;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.25;
+      user-select: none;
+    }
+    .ld-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 1.48em;
+      position: relative;
+    }
+    .ld-cell-dot {
+      width: 0.55em;
+      font-weight: 900;
+    }
+    .ld-cell-digit {
+      width: 1.18em;
+    }
+    .ld-cell-bracket {
+      width: 0.75em;
+    }
+    .ld-top-bar {
+      border-top: 3px solid currentColor;
+    }
+    .ld-sub-bar {
+      border-bottom: 2.5px solid currentColor;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.94); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* 隱藏橫向捲軸但保留滑動功能 */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-kawaii-pinkLight selection:text-kawaii-pinkDark">
+
+  <!-- 頂部日系可愛導航欄 -->
+  <header class="bg-gradient-to-r from-[#FF8FA3] via-[#FFB3C1] to-[#FFD166] text-kawaii-cocoa shadow-md sticky top-0 z-30 border-b-4 border-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      
+      <!-- 左側：可愛小熊數學徽章與標題 -->
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-3xl bg-white flex items-center justify-center shadow-md border-2 border-kawaii-pink shrink-0 relative">
+          <!-- 可愛小熊耳朵裝飾 SVG -->
+          <svg class="w-11 h-11" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="18" r="9" fill="#D4A373" stroke="#4A3B32" stroke-width="3"/>
+            <circle cx="48" cy="18" r="9" fill="#D4A373" stroke="#4A3B32" stroke-width="3"/>
+            <circle cx="32" cy="34" r="21" fill="#FAEDCD" stroke="#4A3B32" stroke-width="3"/>
+            <circle cx="24" cy="30" r="2.8" fill="#4A3B32"/>
+            <circle cx="40" cy="30" r="2.8" fill="#4A3B32"/>
+            <ellipse cx="19" cy="36" rx="3.5" ry="2" fill="#FF8FA3" opacity="0.7"/>
+            <ellipse cx="45" cy="36" rx="3.5" ry="2" fill="#FF8FA3" opacity="0.7"/>
+            <path d="M28 38C28 38 30 41 32 41C34 41 36 38 36 38" stroke="#4A3B32" stroke-width="2.8" stroke-linecap="round"/>
+            <circle cx="32" cy="35" r="2.5" fill="#4A3B32"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-sm font-black bg-white text-kawaii-pinkDark px-3 py-0.5 rounded-full shadow-sm border border-kawaii-pink">
+              🎀 香港小學數學 P6
+            </span>
+            <span class="text-sm font-bold text-kawaii-cocoa/90 bg-white/60 px-2.5 py-0.5 rounded-full">
+              教育局課程重點溫習
+            </span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-black tracking-wide mt-1 text-kawaii-cocoa drop-shadow-sm">
+            小數除法可愛互動溫習站
+          </h1>
+        </div>
+      </div>
+
+      <!-- 右側：學習進度即時糖果徽章 -->
+      <div class="flex items-center self-start lg:self-auto gap-4 bg-white/90 backdrop-blur px-5 py-2.5 rounded-3xl border-2 border-white shadow-sm text-base sm:text-lg">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🌟</span>
+          <span class="font-bold">答對：<strong id="stat-correct" class="font-mono text-2xl text-kawaii-mintDark">0</strong> 題</span>
+        </div>
+        <span class="text-kawaii-cocoa/25 font-bold">|</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🔥</span>
+          <span class="font-bold">連勝：<strong id="stat-streak" class="font-mono text-2xl text-kawaii-pinkDark">0</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主分頁導航列（特大圓潤標籤） -->
+    <nav class="bg-white/85 backdrop-blur-md border-t-2 border-kawaii-pinkLight">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex gap-3 overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('concepts')" id="tab-btn-concepts" class="tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-kawaii-pink text-white border-2 border-kawaii-pinkDark whitespace-nowrap">
+          <span>📚</span>
+          <span>1. 重點與難點精讀</span>
+        </button>
+        <button onclick="switchTab('visualizer')" id="tab-btn-visualizer" class="tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-white text-kawaii-cocoa border-2 border-kawaii-yellow whitespace-nowrap">
+          <span>🪄</span>
+          <span>2. 直式動態演示機</span>
+        </button>
+        <button onclick="switchTab('quiz')" id="tab-btn-quiz" class="tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-white text-kawaii-cocoa border-2 border-kawaii-mint whitespace-nowrap">
+          <span>✏️</span>
+          <span>3. 隨機實戰考核</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 主內容區 -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-7 sm:py-9">
+
+    <!-- ========================================== -->
+    <!-- 分頁 1：重點與難點精讀（左側選項鍵 + 全幅內容） -->
+    <!-- ========================================== -->
+    <section id="section-concepts" class="animate-pop">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+        
+        <!-- 左側：三個核心概念大選項鍵（佔 4 欄，桌面版黏性固定，方便隨時切換） -->
+        <aside class="lg:col-span-4 lg:sticky lg:top-44 space-y-4">
+          <div class="bg-white/90 rounded-3xl p-4 border-2 border-dashed border-kawaii-pink shadow-sm">
+            <div class="text-base font-black text-kawaii-pinkDark px-2 mb-3 flex items-center gap-2">
+              <span>🐾</span>
+              <span>請點選要溫習的核心概念：</span>
+            </div>
+
+            <div class="flex flex-col gap-3.5">
+              <!-- 選項鍵 1 -->
+              <button onclick="switchConcept(1)" id="concept-nav-1" class="concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-kawaii-pinkLight border-kawaii-pink text-kawaii-cocoa">
+                <span class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm shrink-0 border-2 border-kawaii-pink">🍬</span>
+                <div>
+                  <div class="text-sm font-black text-kawaii-pinkDark">核心概念一</div>
+                  <div class="text-lg sm:text-xl font-black leading-snug">倍大與商不變性質</div>
+                </div>
+              </button>
+
+              <!-- 選項鍵 2 -->
+              <button onclick="switchConcept(2)" id="concept-nav-2" class="concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-white border-slate-200 text-kawaii-cocoa hover:bg-kawaii-skyLight">
+                <span class="w-12 h-12 rounded-2xl bg-kawaii-skyLight flex items-center justify-center text-2xl shadow-sm shrink-0 border-2 border-kawaii-sky">🧸</span>
+                <div>
+                  <div class="text-sm font-black text-kawaii-skyDark">核心概念二</div>
+                  <div class="text-lg sm:text-xl font-black leading-snug">直式補 0 三大情況</div>
+                </div>
+              </button>
+
+              <!-- 選項鍵 3 -->
+              <button onclick="switchConcept(3)" id="concept-nav-3" class="concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-white border-slate-200 text-kawaii-cocoa hover:bg-kawaii-mintLight">
+                <span class="w-12 h-12 rounded-2xl bg-kawaii-mintLight flex items-center justify-center text-2xl shadow-sm shrink-0 border-2 border-kawaii-mint">🍓</span>
+                <div>
+                  <div class="text-sm font-black text-kawaii-mintDark">核心概念三</div>
+                  <div class="text-lg sm:text-xl font-black leading-snug">取近似值與餘數還原</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 左側下方快速前往練習小卡 -->
+          <div class="bg-kawaii-yellowLight rounded-3xl p-5 border-2 border-kawaii-yellow text-center shadow-sm">
+            <p class="text-base font-bold text-kawaii-cocoa mb-3">溫習完三個概念了嗎？來測試一下實力吧！</p>
+            <button onclick="switchTab('quiz')" class="kawaii-btn w-full bg-kawaii-yellow hover:bg-amber-300 text-kawaii-cocoa font-black text-lg py-3.5 px-5 rounded-2xl border-2 border-amber-500 flex items-center justify-center gap-2">
+              <span>🚀 進入實戰考核</span>
+            </button>
+          </div>
+        </aside>
+
+        <!-- 右側：全幅核心概念學習區（佔 8 欄，每次只顯示一個概念，空間寬敞！） -->
+        <div class="lg:col-span-8">
+
+          <!-- ===================================== -->
+          <!-- 核心概念一面板：倍大除數成整數          -->
+          <!-- ===================================== -->
+          <div id="concept-panel-1" class="kawaii-card p-6 sm:p-9 space-y-7 animate-pop border-kawaii-pink">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-kawaii-pinkLight pb-5">
+              <div class="flex items-center gap-3">
+                <span class="px-4 py-1.5 rounded-full bg-kawaii-pink text-white font-black text-base shadow-sm">🍬 核心概念一</span>
+                <span class="text-base font-bold text-kawaii-cocoaLight">商不變性質</span>
+              </div>
+              <button onclick="switchConcept(2)" class="text-base font-black text-kawaii-skyDark hover:underline flex items-center gap-1">
+                <span>下一個：直式補 0</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-black text-kawaii-cocoa mb-5">
+                倍大除數（同時移動小數點）
+              </h2>
+
+              <!-- 重點解說框：特別將「使除數變成整數」用最醒目的螢光珊瑚紅/桃紅樣式高亮 -->
+              <div class="bg-kawaii-pinkLight/50 rounded-3xl p-6 border-2 border-kawaii-pink text-lg sm:text-xl leading-loose text-kawaii-cocoa">
+                <p class="mb-4">
+                  當除數是小數時，我們不能直接用直式計算。倍大的最重要目的，就是為了
+                  <span class="inline-flex items-center gap-1.5 bg-[#FF2E63] text-white font-black px-4 py-1 rounded-2xl shadow-md border-2 border-white transform -rotate-1 mx-1 text-xl sm:text-2xl tracking-wide">
+                    <span>✨</span>
+                    <span>使除數變成整數</span>
+                    <span>✨</span>
+                  </span>
+                  ！
+                </p>
+                <p>
+                  只要先數一數<strong>除數有幾多位小數</strong>，再將<strong>除數</strong>和<strong>被除數</strong>同時倍大（<span class="font-mono font-black text-kawaii-pinkDark bg-white px-2.5 py-0.5 rounded-xl border border-kawaii-pink">×10</span>、<span class="font-mono font-black text-kawaii-pinkDark bg-white px-2.5 py-0.5 rounded-xl border border-kawaii-pink">×100</span> 或 <span class="font-mono font-black text-kawaii-pinkDark bg-white px-2.5 py-0.5 rounded-xl border border-kawaii-pink">×1000</span>），就能在不改變「商」的情況下輕鬆計算！
+                </p>
+              </div>
+            </div>
+
+            <!-- 互動小數點移動示範器（放大版） -->
+            <div class="bg-kawaii-skyLight/60 rounded-3xl p-6 sm:p-7 border-2 border-dashed border-kawaii-sky">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <span class="font-black text-kawaii-cocoa text-lg sm:text-xl flex items-center gap-2">
+                  <span>🪄</span> 互動魔法棒：點擊按鈕看小數點如何同時右移！
+                </span>
+              </div>
+
+              <!-- 預設例子選擇按鈕 -->
+              <div class="flex flex-wrap gap-3 mb-6">
+                <button onclick="setShiftDemo(0)" class="shift-preset-btn kawaii-btn px-4 py-2.5 rounded-2xl text-base sm:text-lg font-black bg-kawaii-skyDark text-white border-2 border-sky-800">
+                  例 1：4.8 ÷ 0.6
+                </button>
+                <button onclick="setShiftDemo(1)" class="shift-preset-btn kawaii-btn px-4 py-2.5 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-sky">
+                  例 2：3.6 ÷ 0.15（需補0）
+                </button>
+                <button onclick="setShiftDemo(2)" class="shift-preset-btn kawaii-btn px-4 py-2.5 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-sky">
+                  例 3：7 ÷ 0.25（整數補0）
+                </button>
+              </div>
+
+              <!-- 動畫對比舞台 -->
+              <div class="bg-white rounded-3xl p-6 border-2 border-kawaii-sky shadow-sm space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                  <div class="text-center p-4 rounded-2xl bg-slate-50 border-2 border-slate-200">
+                    <div class="text-base font-bold text-kawaii-cocoaLight mb-2">原本的算式</div>
+                    <div id="shift-orig" class="text-3xl sm:text-4xl font-mono font-black text-kawaii-cocoa">4.8 ÷ 0.6</div>
+                  </div>
+
+                  <div class="text-center p-4 rounded-2xl bg-kawaii-mintLight/60 border-2 border-kawaii-mint">
+                    <div class="text-base font-bold text-kawaii-mintDark mb-2">倍大後的新算式（商不變）</div>
+                    <div id="shift-new" class="text-3xl sm:text-4xl font-mono font-black text-slate-300 transition-all">? ÷ ?</div>
+                  </div>
+                </div>
+
+                <div class="text-center space-y-3">
+                  <button id="shift-action-btn" onclick="toggleShiftAnimation()" class="kawaii-btn bg-[#FF2E63] hover:bg-rose-600 text-white font-black px-7 py-4 rounded-2xl border-2 border-rose-800 text-lg sm:text-xl inline-flex items-center gap-3">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span id="shift-btn-text">同時 × 10（小數點右移 1 位）</span>
+                  </button>
+                  <p id="shift-note" class="text-base sm:text-lg font-black text-[#FF2E63]">
+                    💡 除數 0.6 有 1 位小數，所以兩邊同時 × 10，使除數變成整數 6！
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===================================== -->
+          <!-- 核心概念二面板：直式計算與「補 0」三大情況 -->
+          <!-- ===================================== -->
+          <div id="concept-panel-2" class="hidden kawaii-card p-6 sm:p-9 space-y-7 animate-pop border-kawaii-sky">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-kawaii-skyLight pb-5">
+              <div class="flex items-center gap-3">
+                <span class="px-4 py-1.5 rounded-full bg-kawaii-skyDark text-white font-black text-base shadow-sm">🧸 核心概念二</span>
+                <span class="text-base font-bold text-kawaii-cocoaLight">小數點對齊與補 0 規則</span>
+              </div>
+              <button onclick="switchConcept(3)" class="text-base font-black text-kawaii-mintDark hover:underline flex items-center gap-1">
+                <span>下一個：近似值與餘數還原</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-black text-kawaii-cocoa mb-3">
+                直式計算與「補 0」三大關鍵情況
+              </h2>
+              <p class="text-lg sm:text-xl text-kawaii-cocoa leading-relaxed">
+                做直式時最容易漏寫「0」或點錯小數點！請緊記：
+                <span class="bg-kawaii-yellowLight px-3 py-1 rounded-xl font-black border-b-4 border-kawaii-yellow">商的小數點必須與被除數「新小數點」上下對齊！</span>
+              </p>
+            </div>
+
+            <!-- 三大情況卡片（垂直或大網格排列，確保特大字體不擁擠） -->
+            <div class="space-y-6">
+              
+              <!-- 情況 A -->
+              <div class="bg-kawaii-yellowLight/60 rounded-3xl p-6 border-2 border-kawaii-yellow grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div class="md:col-span-7 space-y-2">
+                  <span class="inline-block px-3.5 py-1 rounded-full bg-kawaii-yellow text-kawaii-cocoa font-black text-base">情況 A：不夠除，商的個位補 0</span>
+                  <h3 class="text-2xl font-black text-kawaii-cocoa">1.2 ÷ 4 = 0.3</h3>
+                  <p class="text-lg text-kawaii-cocoa leading-relaxed">
+                    被除數的整數部分「1」比除數「4」小，不夠除！必須先在商的個位寫 <strong class="text-[#FF2E63] text-2xl">0</strong>，點上小數點後，再將 12 個十分之一除以 4。
+                  </p>
+                </div>
+                <div id="concept2-grid-a" class="md:col-span-5 bg-white p-5 rounded-3xl border-2 border-kawaii-yellow shadow-sm flex justify-center">
+                  <!-- 由 JS 位值格網引擎動態生成精準對齊直式 -->
+                </div>
+              </div>
+
+              <!-- 情況 B -->
+              <div class="bg-kawaii-mintLight/60 rounded-3xl p-6 border-2 border-kawaii-mint grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div class="md:col-span-7 space-y-2">
+                  <span class="inline-block px-3.5 py-1 rounded-full bg-kawaii-mint text-white font-black text-base">情況 B：除不盡，被除數末尾添 0</span>
+                  <h3 class="text-2xl font-black text-kawaii-cocoa">5 ÷ 2 = 2.5</h3>
+                  <p class="text-lg text-kawaii-cocoa leading-relaxed">
+                    除到個位仍有餘數「1」時，在被除數右下角點上小數點並<strong class="text-[#FF2E63] text-2xl">補 0</strong>（變成 5.0），同時在商點上小數點，繼續把 10 除以 2。
+                  </p>
+                </div>
+                <div id="concept2-grid-b" class="md:col-span-5 bg-white p-5 rounded-3xl border-2 border-kawaii-mint shadow-sm flex justify-center">
+                  <!-- 由 JS 位值格網引擎動態生成精準對齊直式 -->
+                </div>
+              </div>
+
+              <!-- 情況 C -->
+              <div class="bg-kawaii-pinkLight/60 rounded-3xl p-6 border-2 border-kawaii-pink grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div class="md:col-span-7 space-y-2">
+                  <span class="inline-block px-3.5 py-1 rounded-full bg-kawaii-pink text-white font-black text-base">情況 C：商的中間不夠除補 0</span>
+                  <h3 class="text-2xl font-black text-kawaii-cocoa">4.16 ÷ 4 = 1.04</h3>
+                  <p class="text-lg text-kawaii-cocoa leading-relaxed">
+                    十分位的「1」拉下來後比 4 小，不夠除！千萬不可直接拉下「6」，必須先在商的十分位寫 <strong class="text-[#FF2E63] text-2xl">0</strong> 佔位，再拉下 6 變成 16 除以 4。
+                  </p>
+                </div>
+                <div id="concept2-grid-c" class="md:col-span-5 bg-white p-5 rounded-3xl border-2 border-kawaii-pink shadow-sm flex justify-center">
+                  <!-- 由 JS 位值格網引擎動態生成精準對齊直式 -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ===================================== -->
+          <!-- 核心概念三面板：取近似值與餘數還原        -->
+          <!-- ===================================== -->
+          <div id="concept-panel-3" class="hidden kawaii-card p-6 sm:p-9 space-y-8 animate-pop border-kawaii-mint">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-kawaii-mintLight pb-5">
+              <div class="flex items-center gap-3">
+                <span class="px-4 py-1.5 rounded-full bg-kawaii-mintDark text-white font-black text-base shadow-sm">🍓 核心概念三</span>
+                <span class="text-base font-bold text-kawaii-cocoaLight">取近似值與應用題餘數還原</span>
+              </div>
+              <button onclick="switchTab('visualizer')" class="text-base font-black text-kawaii-pinkDark hover:underline flex items-center gap-1">
+                <span>前往直式動態演示機</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <!-- 第一部分：取近似值 -->
+            <div class="space-y-4">
+              <h2 class="text-2xl sm:text-3xl font-black text-kawaii-cocoa">
+                1️⃣ 按要求取近似值（四捨五入法）
+              </h2>
+              <p class="text-lg sm:text-xl text-kawaii-cocoa leading-relaxed">
+                當題目要求「答案取至十分位」或「百分位」時，直式只需計算到<strong class="bg-kawaii-yellowLight px-2.5 py-0.5 rounded-xl border-b-4 border-kawaii-yellow">比要求多一位小數</strong>即可停止，不必無止境除下去！
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="p-5 rounded-3xl bg-purple-50 border-2 border-purple-200 space-y-2">
+                  <div class="font-black text-purple-900 text-lg">🎯 題目要求：取至十分位（1 位小數）</div>
+                  <div class="text-base text-kawaii-cocoa">👉 算到<strong>百分位</strong>（第 2 位小數），看百分位四捨五入。</div>
+                  <div class="font-mono text-lg bg-white p-3 rounded-2xl border border-purple-200 text-kawaii-cocoa font-bold">
+                    例：10 ÷ 3 = 3.3<span class="text-[#FF2E63] font-black underline text-xl">3</span>... ≈ <span class="text-purple-800 text-xl">3.3</span>
+                  </div>
+                </div>
+
+                <div class="p-5 rounded-3xl bg-purple-50 border-2 border-purple-200 space-y-2">
+                  <div class="font-black text-purple-900 text-lg">🎯 題目要求：取至百分位（2 位小數）</div>
+                  <div class="text-base text-kawaii-cocoa">👉 算到<strong>千分位</strong>（第 3 位小數），看千分位四捨五入。</div>
+                  <div class="font-mono text-lg bg-white p-3 rounded-2xl border border-purple-200 text-kawaii-cocoa font-bold">
+                    例：5 ÷ 7 = 0.71<span class="text-[#FF2E63] font-black underline text-xl">4</span>... ≈ <span class="text-purple-800 text-xl">0.71</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-base font-bold text-kawaii-cocoaLight bg-slate-50 px-4 py-3 rounded-2xl border border-slate-200">
+                ⚠️ 溫馨提醒：若近似值末尾是 0（如 2.98 取至十分位得 <strong class="text-kawaii-cocoa">3.0</strong>），<strong class="text-[#FF2E63]">.0 必須保留</strong>以顯示精確度！
+              </div>
+            </div>
+
+            <!-- 第二部分：應用題餘數還原大陷阱 -->
+            <div class="bg-gradient-to-br from-kawaii-pinkLight via-white to-kawaii-yellowLight rounded-3xl p-6 sm:p-7 border-3 border-kawaii-pink space-y-5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="px-4 py-1.5 rounded-full bg-[#FF2E63] text-white font-black text-base shadow-sm">
+                  🚨 考試最高危陷阱：應用題「餘數還原」
+                </span>
+                <span class="text-base font-black text-kawaii-pinkDark">HK EDB 必考題型</span>
+              </div>
+
+              <p class="text-lg sm:text-xl font-bold text-kawaii-cocoa leading-relaxed bg-white/80 p-4 rounded-2xl border border-kawaii-pink">
+                🧃 <strong>【經典例題】</strong>有果汁 <span class="text-kawaii-mintDark font-black underline">5.5 升</span>，每 <span class="text-kawaii-mintDark font-black underline">0.8 升</span>裝成一瓶，最多可裝滿多少瓶？還剩下果汁多少升？
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
+                <div class="p-5 rounded-3xl bg-white border-2 border-slate-200 space-y-3">
+                  <div class="text-base font-black text-kawaii-cocoaLight">步驟 1：倍大計算（同時 × 10）</div>
+                  <div class="font-mono text-xl font-black text-kawaii-cocoa">5.5 ÷ 0.8 ➔ <span class="text-kawaii-skyDark">55 ÷ 8</span></div>
+                  <div id="concept3-grid-rem" class="bg-kawaii-cream p-3 rounded-2xl border border-slate-200 flex justify-center">
+                    <!-- 由 JS 位值格網引擎生成 8 ) 55 的嚴格對齊直式 -->
+                  </div>
+                </div>
+
+                <div class="p-5 rounded-3xl bg-white border-2 border-[#FF2E63] space-y-2">
+                  <div class="text-base font-black text-[#FF2E63]">🔄 步驟 2：餘數必須還原（÷ 10）！</div>
+                  <p class="text-base text-kawaii-cocoa leading-relaxed">
+                    剛才把 5.5 升變成了 55（倍大了 10 倍），直式個位餘下的「7」其實是 <strong>7 個 0.1 升</strong>！
+                  </p>
+                  <div class="font-mono text-lg font-black text-[#FF2E63] pt-1">
+                    真正餘數 = 7 ÷ 10 = <span class="text-2xl bg-[#FF2E63] text-white px-3 py-1 rounded-xl">0.7 升</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-kawaii-yellowLight border-2 border-kawaii-yellow rounded-2xl p-4 flex items-start gap-3">
+                <span class="text-2xl">💡</span>
+                <div class="text-base sm:text-lg text-kawaii-cocoa leading-relaxed">
+                  <strong>黃金口訣：「商不變，餘數要還原！」</strong><br>
+                  計算時把算式<strong>倍大了多少倍</strong>（×10 或 ×100），最後求餘數時就必須<strong>縮小回多少倍</strong>（÷10 或 ÷100）！
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 分頁 2：直式動態演示機                       -->
+    <!-- ========================================== -->
+    <section id="section-visualizer" class="hidden space-y-6 animate-pop">
+      <div class="kawaii-card p-6 sm:p-9 border-kawaii-yellow">
+        <div class="flex flex-col gap-4 border-b-2 border-dashed border-kawaii-yellowLight pb-6 mb-7">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-kawaii-cocoa flex items-center gap-3">
+              <span class="w-11 h-11 rounded-2xl bg-kawaii-yellowLight text-amber-700 flex items-center justify-center text-2xl border-2 border-kawaii-yellow">🪄</span>
+              直式動態演示機（逐步拆解運算過程）
+            </h2>
+            <p class="text-kawaii-cocoaLight text-lg mt-2">選擇下方不同難度的典型題目，點擊「下一步」觀察小數點移動、商補 0 與餘數還原。</p>
+          </div>
+          
+          <!-- 預設題目選擇器（特大按鈕） -->
+          <div class="flex flex-wrap gap-3 pt-1">
+            <button onclick="loadVisualizerCase(0)" class="vis-case-btn kawaii-btn px-4 py-3 rounded-2xl text-base sm:text-lg font-black bg-kawaii-pink text-white border-2 border-kawaii-pinkDark">
+              題型 1：3.6 ÷ 1.5（商小數補0）
+            </button>
+            <button onclick="loadVisualizerCase(1)" class="vis-case-btn kawaii-btn px-4 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-yellow">
+              題型 2：1.26 ÷ 0.4（末尾補0除盡）
+            </button>
+            <button onclick="loadVisualizerCase(2)" class="vis-case-btn kawaii-btn px-4 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-yellow">
+              題型 3：果汁分裝應用題（餘數還原）
+            </button>
+            <button onclick="loadVisualizerCase(3)" class="vis-case-btn kawaii-btn px-4 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-yellow">
+              題型 4：8.12 ÷ 4（商中間補0）
+            </button>
+          </div>
+        </div>
+
+        <!-- 情境橫幅（僅在應用題題型時自動顯示，讓學生清楚掌握題意） -->
+        <div id="vis-context-banner" class="hidden mb-6 bg-kawaii-pinkLight/70 border-2 border-kawaii-pink rounded-3xl p-5 flex items-start gap-3.5 animate-pop">
+          <span class="text-3xl shrink-0">🧃</span>
+          <div>
+            <div class="text-sm font-black text-kawaii-pinkDark mb-0.5">應用題情境</div>
+            <p id="vis-context-text" class="text-lg sm:text-xl font-black text-kawaii-cocoa leading-relaxed"></p>
+          </div>
+        </div>
+
+        <!-- 演示主舞台 -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <!-- 左側：可愛深可可黑板直式區 (佔 7 欄) -->
+          <div class="lg:col-span-7 bg-[#3D312A] text-white rounded-3xl p-6 sm:p-8 shadow-inner relative overflow-hidden min-h-[390px] flex flex-col justify-between border-4 border-[#D4A373]">
+            <div class="flex items-center justify-between text-base border-b border-white/15 pb-3">
+              <span id="vis-badge" class="px-3.5 py-1 rounded-full bg-kawaii-pink text-white font-black">倍大除數成整數</span>
+              <span id="vis-step-counter" class="font-mono font-bold text-kawaii-yellow text-lg">步驟 1 / 4</span>
+            </div>
+
+            <!-- 直式渲染容器 -->
+            <div id="vis-board" class="my-auto py-6 flex flex-col items-center justify-center">
+              <!-- 由 JS 動態生成特大清晰對齊的直式 HTML -->
+            </div>
+
+            <!-- 控制按鈕列 -->
+            <div class="flex items-center justify-between pt-4 border-t border-white/15 gap-2">
+              <button id="vis-prev-btn" onclick="stepVisualizer(-1)" class="kawaii-btn px-5 py-3 rounded-2xl bg-white/15 hover:bg-white/25 disabled:opacity-35 text-base sm:text-lg font-black transition flex items-center gap-2">
+                <i class="fa-solid fa-chevron-left"></i> 上一步
+              </button>
+              <div id="vis-dots" class="flex gap-2.5"></div>
+              <button id="vis-next-btn" onclick="stepVisualizer(1)" class="kawaii-btn px-6 py-3 rounded-2xl bg-kawaii-yellow hover:bg-amber-300 text-kawaii-cocoa disabled:opacity-35 text-base sm:text-lg font-black transition flex items-center gap-2">
+                下一步 <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- 右側：步驟講解與策略提示 (佔 5 欄) -->
+          <div class="lg:col-span-5 space-y-5">
+            <div class="bg-kawaii-skyLight border-2 border-kawaii-sky rounded-3xl p-6">
+              <div class="text-sm font-black text-kawaii-skyDark uppercase tracking-wider mb-1">📖 當前步驟解說</div>
+              <h3 id="vis-step-title" class="text-xl sm:text-2xl font-black text-kawaii-cocoa mb-3">步驟標題</h3>
+              <p id="vis-step-desc" class="text-kawaii-cocoa text-lg leading-relaxed">
+                步驟詳細說明文字...
+              </p>
+            </div>
+
+            <div class="bg-kawaii-yellowLight border-2 border-kawaii-yellow rounded-3xl p-6">
+              <div class="flex items-center gap-2 font-black text-amber-900 text-lg mb-2">
+                <span>🌟</span>
+                <span>防錯小貼士</span>
+              </div>
+              <p id="vis-step-tip" class="text-base sm:text-lg text-kawaii-cocoa leading-relaxed">
+                提示內容...
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 分頁 3：隨機實戰考核區                       -->
+    <!-- ========================================== -->
+    <section id="section-quiz" class="hidden space-y-7 animate-pop">
+      
+      <!-- 題型篩選器與出題控制列 -->
+      <div class="kawaii-card p-6 border-kawaii-mint flex flex-col gap-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-sm font-black text-kawaii-mintDark bg-kawaii-mintLight px-3.5 py-1 rounded-full border border-kawaii-mint">🎲 無限動態題庫</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-kawaii-cocoa mt-2">選擇考核題型</h2>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button onclick="setQuizMode('mixed')" id="mode-mixed" class="quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-kawaii-pink text-white border-2 border-kawaii-pinkDark">
+            🌈 綜合挑戰（全題型）
+          </button>
+          <button onclick="setQuizMode('calc')" id="mode-calc" class="quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-sky">
+            類型 A：小數除法與補 0
+          </button>
+          <button onclick="setQuizMode('round')" id="mode-round" class="quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-purple-300">
+            類型 B：按要求取近似值
+          </button>
+          <button onclick="setQuizMode('word')" id="mode-word" class="quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-mint">
+            類型 C：含餘數應用題
+          </button>
+        </div>
+      </div>
+
+      <!-- 題目作答區卡片 -->
+      <div class="kawaii-card p-6 sm:p-9 border-kawaii-pink">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-kawaii-pinkLight pb-5 mb-6">
+          <div class="flex items-center gap-3">
+            <span id="q-type-badge" class="px-4 py-1.5 rounded-full bg-kawaii-mintLight text-kawaii-mintDark font-black text-base border border-kawaii-mint">類型 A：小數除法計算</span>
+            <span id="q-number" class="text-base font-mono font-bold text-kawaii-cocoaLight">題目 #1</span>
+          </div>
+          <button onclick="generateNewQuestion()" class="kawaii-btn text-base font-black text-kawaii-cocoa bg-kawaii-yellowLight hover:bg-kawaii-yellow px-4 py-2 rounded-2xl border-2 border-kawaii-yellow flex items-center gap-2">
+            <i class="fa-solid fa-arrows-rotate"></i> 換一題
+          </button>
+        </div>
+
+        <!-- 題目敘述 -->
+        <div id="q-prompt-container" class="mb-7">
+          <p id="q-text" class="text-2xl sm:text-3xl font-black text-kawaii-cocoa leading-relaxed">
+            題目載入中...
+          </p>
+          <p id="q-subhint" class="text-base sm:text-lg text-[#FF2E63] font-bold mt-3 bg-kawaii-pinkLight/50 px-4 py-2.5 rounded-2xl border border-kawaii-pink hidden"></p>
+        </div>
+
+        <!-- 輸入表單區 -->
+        <form id="quiz-form" onsubmit="handleQuizSubmit(event)" class="space-y-6">
+          
+          <!-- 單一答案輸入框（類型 A & B） -->
+          <div id="input-single-group" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <label for="ans-single" class="font-black text-kawaii-cocoa text-xl">你的答案：</label>
+            <input type="number" step="any" id="ans-single" placeholder="請輸入數字" required
+              class="w-full sm:w-64 px-5 py-3.5 rounded-2xl border-3 border-kawaii-sky focus:border-kawaii-pink focus:outline-none font-mono text-2xl font-black text-kawaii-cocoa bg-kawaii-skyLight/30 focus:bg-white transition">
+          </div>
+
+          <!-- 雙答案輸入框（類型 C：應用題商與餘數） -->
+          <div id="input-word-group" class="hidden grid grid-cols-1 md:grid-cols-2 gap-5 bg-kawaii-cream p-6 rounded-3xl border-2 border-dashed border-kawaii-mint">
+            <div>
+              <label for="ans-quotient" id="label-quotient" class="block font-black text-kawaii-cocoa text-lg mb-2">最多可分成（整數）：</label>
+              <div class="flex items-center gap-3">
+                <input type="number" step="1" id="ans-quotient" placeholder="例：6"
+                  class="w-full px-4 py-3.5 rounded-2xl border-3 border-kawaii-mint focus:border-kawaii-mintDark focus:outline-none font-mono text-2xl font-black text-kawaii-cocoa bg-white">
+                <span id="unit-quotient" class="font-black text-xl text-kawaii-cocoa shrink-0">份</span>
+              </div>
+            </div>
+            <div>
+              <label for="ans-remainder" id="label-remainder" class="block font-black text-[#FF2E63] text-lg mb-2">
+                還剩下多少（記得還原小數！）：
+              </label>
+              <div class="flex items-center gap-3">
+                <input type="number" step="any" id="ans-remainder" placeholder="例：0.7"
+                  class="w-full px-4 py-3.5 rounded-2xl border-3 border-kawaii-pink focus:border-[#FF2E63] focus:outline-none font-mono text-2xl font-black text-kawaii-cocoa bg-white">
+                <span id="unit-remainder" class="font-black text-xl text-kawaii-cocoa shrink-0">升</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 提交與下一題按鈕 -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <button type="submit" id="btn-submit-ans" class="kawaii-btn bg-kawaii-mint hover:bg-emerald-500 text-white font-black px-8 py-4 rounded-2xl border-2 border-kawaii-mintDark text-lg sm:text-xl flex items-center gap-2.5">
+              <i class="fa-solid fa-check"></i> 提交答案並核對
+            </button>
+            <button type="button" id="btn-next-q" onclick="generateNewQuestion()" class="hidden kawaii-btn bg-kawaii-pink hover:bg-rose-400 text-white font-black px-8 py-4 rounded-2xl border-2 border-kawaii-pinkDark text-lg sm:text-xl flex items-center gap-2.5">
+              <span>下一題挑戰</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </form>
+
+        <!-- 即時批改與解題策略詳解區（提交後顯示） -->
+        <div id="feedback-panel" class="hidden mt-9 pt-7 border-t-3 border-dashed border-kawaii-pinkLight animate-pop">
+          <!-- 批改結果橫幅 -->
+          <div id="feedback-banner" class="p-5 rounded-3xl mb-6 flex items-center gap-4">
+            <!-- JS 動態填入正確或錯誤訊息 -->
+          </div>
+
+          <!-- 詳解雙欄：直式還原步驟 + 解題策略 -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- 左側：直式運算與倍大還原過程 -->
+            <div class="lg:col-span-5 bg-[#3D312A] text-white rounded-3xl p-6 flex flex-col justify-between border-3 border-[#D4A373]">
+              <div>
+                <div class="text-base font-black text-kawaii-yellow mb-3 flex items-center gap-2">
+                  <span>🧮</span> 標準位值對齊直式與步驟
+                </div>
+                <div id="feedback-vertical-box" class="bg-white/10 rounded-2xl p-4 font-mono text-lg leading-relaxed space-y-3 border border-white/15">
+                  <!-- JS 動態填入精準位值對齊直式 -->
+                </div>
+              </div>
+              <div id="feedback-scale-tag" class="mt-4 text-base text-kawaii-yellow font-black bg-kawaii-yellow/15 border border-kawaii-yellow/40 px-4 py-2.5 rounded-2xl">
+                <!-- 倍大倍數提示 -->
+              </div>
+            </div>
+
+            <!-- 右側：結構化「解題策略」 -->
+            <div class="lg:col-span-7 bg-kawaii-yellowLight/70 border-2 border-kawaii-yellow rounded-3xl p-6 sm:p-7">
+              <h4 class="font-black text-kawaii-cocoa text-xl sm:text-2xl flex items-center gap-2.5 mb-4">
+                <span class="w-9 h-9 rounded-2xl bg-kawaii-yellow text-kawaii-cocoa flex items-center justify-center text-lg border border-amber-500">💡</span>
+                解題策略與防錯拆解
+              </h4>
+              <ol id="feedback-strategy-list" class="space-y-3 text-lg text-kawaii-cocoa list-decimal list-inside leading-relaxed">
+                <!-- JS 動態填入解題步驟 -->
+              </ol>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 日系可愛頁尾 -->
+  <footer class="bg-white/90 border-t-2 border-kawaii-pinkLight py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between text-base font-bold text-kawaii-cocoaLight gap-2">
+      <div>🌸 緊貼香港教育局（EDB）小學數學科課程指引（小六：小數除法）</div>
+      <div>✨ 每天練習一點點，小數除法變簡單！</div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- JavaScript 核心互動與題庫引擎               -->
+  <!-- ========================================== -->
+  <script>
+    // ------------------------------------------
+    // 0. 香港教科書標準直式位值格網渲染引擎 (Place-Value Grid Engine)
+    // ------------------------------------------
+    /**
+     * 將直式除法渲染為嚴格按「數位（十位、個位、小數點、十分位、百分位...）」對齊的 CSS Grid
+     * 參考香港小學數學教科書標準格式：如 8 ) 100.0，每一個數字與小數點獨立佔一欄，絕不偏移。
+     */
+    function renderLongDivisionGrid(config) {
+      const {
+        divisor = '',
+        dividendCols = [], // 例如 ['1', '.', '2'] 或 [{t:'5'}, {t:'.', cls:'text-[#FF2E63]'}, {t:'0', cls:'text-[#FF2E63]'}]
+        quotientCols = [], // 與 dividendCols 等長，例如 [{t:'0', cls:'text-[#FF2E63]'}, {t:'.', cls:'text-[#FF2E63]'}, {t:'3', cls:'text-[#FF2E63]'}]
+        steps = [],        // 每一步的直式列：{ cols: [...], underline: [startIdx, endIdx] }
+        sizeClass = 'text-2xl sm:text-3xl',
+        bracketColor = 'currentColor'
+      } = config;
+
+      const n = dividendCols.length;
+      // 定義欄寬：第1欄為除數(auto)，第2欄為右括號 ')' (0.75em)，其後每欄依是否為小數點設定精準等寬
+      const colWidths = ['auto', '0.75em'];
+      for (let i = 0; i < n; i++) {
+        const raw = typeof dividendCols[i] === 'object' ? dividendCols[i].t : dividendCols[i];
+        colWidths.push(raw === '.' ? '0.52em' : '1.18em');
+      }
+
+      const normCell = (item) => {
+        if (item === null || item === undefined || item === '') return { t: '', cls: '' };
+        if (typeof item === 'object') return { t: item.t || '', cls: item.cls || '' };
+        return { t: String(item), cls: '' };
+      };
+
+      let html = `<div class="ld-grid font-black ${sizeClass}" style="grid-template-columns: ${colWidths.join(' ')};">`;
+
+      // 第 1 行：商 (Quotient Row) — 嚴格對應被除數的每一個位值欄
+      html += `<div class="ld-cell"></div><div class="ld-cell"></div>`;
+      for (let i = 0; i < n; i++) {
+        const q = normCell(quotientCols[i]);
+        const isDot = (typeof dividendCols[i] === 'object' ? dividendCols[i].t : dividendCols[i]) === '.';
+        html += `<div class="ld-cell ${isDot ? 'ld-cell-dot' : 'ld-cell-digit'} ${q.cls}">${q.t}</div>`;
+      }
+
+      // 第 2 行：除數 + 弧形括號 ')' + 頂部橫線與被除數 (Divisor & Dividend Row)
+      html += `<div class="ld-cell pr-1.5 justify-end">${divisor}</div>`;
+      html += `<div class="ld-cell ld-cell-bracket" style="color:${bracketColor};">
+        <svg viewBox="0 0 14 36" class="w-full h-full overflow-visible" preserveAspectRatio="none">
+          <path d="M 3 1 Q 11 18 3 35" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+        </svg>
+      </div>`;
+      for (let i = 0; i < n; i++) {
+        const d = normCell(dividendCols[i]);
+        const isDot = d.t === '.';
+        html += `<div class="ld-cell ld-top-bar ${isDot ? 'ld-cell-dot' : 'ld-cell-digit'} ${d.cls}">${d.t}</div>`;
+      }
+
+      // 第 3 行起：直式減法與餘數列 (Subtraction & Remainder Rows)
+      steps.forEach(row => {
+        html += `<div class="ld-cell"></div><div class="ld-cell"></div>`;
+        const uStart = row.underline ? row.underline[0] : -1;
+        const uEnd = row.underline ? row.underline[1] : -1;
+        for (let i = 0; i < n; i++) {
+          const c = normCell(row.cols[i]);
+          const isDot = (typeof dividendCols[i] === 'object' ? dividendCols[i].t : dividendCols[i]) === '.';
+          const hasLine = (i >= uStart && i <= uEnd);
+          html += `<div class="ld-cell ${isDot ? 'ld-cell-dot' : 'ld-cell-digit'} ${hasLine ? 'ld-sub-bar' : ''} ${c.cls}">${c.t}</div>`;
+        }
+      });
+
+      html += `</div>`;
+      return html;
+    }
+
+    /**
+     * 自動為任意小數／整數除法算式生成位值格網（用於分頁 3 隨機題庫詳解）
+     */
+    function buildAutoLongDivisionHTML(dividendNum, divisorNum, maxDecimalPlaces = 2, stopAtInt = false) {
+      // 將除數化為整數
+      const divStr = divisorNum.toString();
+      const decPlaces = divStr.includes('.') ? divStr.split('.')[1].length : 0;
+      const factor = Math.pow(10, decPlaces);
+      const intDivisor = Math.round(divisorNum * factor);
+      const scaledDividend = cleanFloat(dividendNum * factor);
+
+      // 準備被除數的位值陣列（整數部分 + 小數點 + 所需小數位）
+      const sdStr = scaledDividend.toString();
+      const parts = sdStr.split('.');
+      const intPart = parts[0];
+      let fracPart = parts[1] || '';
+
+      if (!stopAtInt) {
+        while (fracPart.length < maxDecimalPlaces) {
+          fracPart += '0';
+        }
+        if (fracPart.length > maxDecimalPlaces) {
+          fracPart = fracPart.slice(0, maxDecimalPlaces);
+        }
+      } else {
+        fracPart = '';
+      }
+
+      const dividendCols = [];
+      const colTypes = []; // 'digit' or 'dot'
+      for (const ch of intPart) {
+        dividendCols.push(ch);
+        colTypes.push('digit');
+      }
+      if (fracPart.length > 0) {
+        dividendCols.push('.');
+        colTypes.push('dot');
+        for (const ch of fracPart) {
+          dividendCols.push({ t: ch, cls: parts[1] && dividendCols.filter(x => x !== '.').length > intPart.length + (parts[1]?.length || 0) ? 'text-kawaii-mint' : '' });
+          colTypes.push('digit');
+        }
+      }
+
+      const totalCols = dividendCols.length;
+      const quotientCols = Array(totalCols).fill('');
+      const steps = [];
+
+      let currentVal = 0;
+      let started = false;
+      let firstDigitCol = -1;
+
+      for (let col = 0; col < totalCols; col++) {
+        if (colTypes[col] === 'dot') {
+          quotientCols[col] = { t: '.', cls: 'text-kawaii-yellow' };
+          continue;
+        }
+        const digitChar = typeof dividendCols[col] === 'object' ? dividendCols[col].t : dividendCols[col];
+        const digit = parseInt(digitChar, 10);
+        currentVal = currentVal * 10 + digit;
+
+        const isLastIntCol = (!fracPart.length && col === totalCols - 1) || (col + 1 < totalCols && colTypes[col + 1] === 'dot');
+
+        if (currentVal < intDivisor && !started && !isLastIntCol) {
+          continue;
+        }
+
+        const qDigit = Math.floor(currentVal / intDivisor);
+        const product = qDigit * intDivisor;
+        const remainder = currentVal - product;
+
+        quotientCols[col] = { t: String(qDigit), cls: 'text-kawaii-yellow' };
+
+        if (qDigit > 0 || started) {
+          // 寫出乘積列（右對齊於當前欄 col）
+          const prodStr = String(product);
+          const prodRow = Array(totalCols).fill('');
+          let pIdx = prodStr.length - 1;
+          let scanCol = col;
+          let leftBound = col;
+          while (pIdx >= 0 && scanCol >= 0) {
+            if (colTypes[scanCol] === 'dot') {
+              scanCol--;
+              continue;
+            }
+            prodRow[scanCol] = { t: prodStr[pIdx], cls: 'text-white/70' };
+            leftBound = scanCol;
+            pIdx--;
+            scanCol--;
+          }
+          steps.push({ cols: prodRow, underline: [leftBound, col] });
+
+          // 找下一個數字欄
+          let nextDigitCol = -1;
+          for (let k = col + 1; k < totalCols; k++) {
+            if (colTypes[k] === 'digit') {
+              nextDigitCol = k;
+              break;
+            }
+          }
+
+          if (nextDigitCol !== -1) {
+            const nextDigitChar = typeof dividendCols[nextDigitCol] === 'object' ? dividendCols[nextDigitCol].t : dividendCols[nextDigitCol];
+            const nextVal = remainder * 10 + parseInt(nextDigitChar, 10);
+            const nextStr = String(nextVal);
+            const remRow = Array(totalCols).fill('');
+            let rIdx = nextStr.length - 1;
+            let rCol = nextDigitCol;
+            while (rIdx >= 0 && rCol >= 0) {
+              if (colTypes[rCol] === 'dot') {
+                rCol--;
+                continue;
+              }
+              remRow[rCol] = { t: nextStr[rIdx], cls: 'text-kawaii-mint' };
+              rIdx--;
+              rCol--;
+            }
+            steps.push({ cols: remRow });
+          } else {
+            // 最後餘數列（右對齊於最後一欄 col）
+            const remStr = String(remainder);
+            const remRow = Array(totalCols).fill('');
+            let rIdx = remStr.length - 1;
+            let rCol = col;
+            while (rIdx >= 0 && rCol >= 0) {
+              if (colTypes[rCol] === 'dot') {
+                rCol--;
+                continue;
+              }
+              remRow[rCol] = { t: remStr[rIdx], cls: remainder === 0 ? 'text-kawaii-mint' : 'text-[#FF8FA3]' };
+              rIdx--;
+              rCol--;
+            }
+            steps.push({ cols: remRow });
+          }
+        } else if (isLastIntCol && qDigit === 0) {
+          // 如 0.6 ÷ 4，整數部分為 0
+        }
+
+        started = true;
+        currentVal = remainder;
+      }
+
+      return renderLongDivisionGrid({
+        divisor: intDivisor,
+        dividendCols,
+        quotientCols,
+        steps,
+        sizeClass: 'text-xl sm:text-2xl text-white'
+      });
+    }
+
+    /**
+     * 渲染分頁 1 核心概念二與核心概念三的所有標準直式圖
+     */
+    function initConceptGrids() {
+      // 情況 A：1.2 ÷ 4 = 0.3
+      const gridA = document.getElementById('concept2-grid-a');
+      if (gridA) {
+        gridA.innerHTML = renderLongDivisionGrid({
+          divisor: '4',
+          dividendCols: ['1', '.', '2'],
+          quotientCols: [
+            { t: '0', cls: 'text-[#FF2E63]' },
+            { t: '.', cls: 'text-[#FF2E63]' },
+            { t: '3', cls: 'text-[#FF2E63]' }
+          ],
+          steps: [
+            { cols: [{ t: '1', cls: 'text-slate-400' }, '', { t: '2', cls: 'text-slate-400' }], underline: [0, 2] },
+            { cols: ['', '', { t: '0', cls: 'text-slate-400' }] }
+          ],
+          sizeClass: 'text-2xl sm:text-3xl text-kawaii-cocoa'
+        });
+      }
+
+      // 情況 B：5 ÷ 2 = 2.5
+      const gridB = document.getElementById('concept2-grid-b');
+      if (gridB) {
+        gridB.innerHTML = renderLongDivisionGrid({
+          divisor: '2',
+          dividendCols: ['5', { t: '.', cls: 'text-[#FF2E63]' }, { t: '0', cls: 'text-[#FF2E63]' }],
+          quotientCols: [
+            '2',
+            { t: '.', cls: 'text-[#FF2E63]' },
+            { t: '5', cls: 'text-[#FF2E63]' }
+          ],
+          steps: [
+            { cols: [{ t: '4', cls: 'text-slate-400' }, '', ''], underline: [0, 2] },
+            { cols: ['1', '', '0'] },
+            { cols: [{ t: '1', cls: 'text-slate-400' }, '', { t: '0', cls: 'text-slate-400' }], underline: [0, 2] },
+            { cols: ['', '', { t: '0', cls: 'text-slate-400' }] }
+          ],
+          sizeClass: 'text-2xl sm:text-3xl text-kawaii-cocoa'
+        });
+      }
+
+      // 情況 C：4.16 ÷ 4 = 1.04
+      const gridC = document.getElementById('concept2-grid-c');
+      if (gridC) {
+        gridC.innerHTML = renderLongDivisionGrid({
+          divisor: '4',
+          dividendCols: ['4', '.', '1', '6'],
+          quotientCols: ['1', '.', { t: '0', cls: 'text-[#FF2E63]' }, '4'],
+          steps: [
+            { cols: [{ t: '4', cls: 'text-slate-400' }, '', '', ''], underline: [0, 3] },
+            { cols: ['', '', '1', '6'] },
+            { cols: ['', '', { t: '1', cls: 'text-slate-400' }, { t: '6', cls: 'text-slate-400' }], underline: [2, 3] },
+            { cols: ['', '', '', { t: '0', cls: 'text-slate-400' }] }
+          ],
+          sizeClass: 'text-2xl sm:text-3xl text-kawaii-cocoa'
+        });
+      }
+
+      // 核心概念三：8 ) 55 = 6 ... 7
+      const gridRem = document.getElementById('concept3-grid-rem');
+      if (gridRem) {
+        gridRem.innerHTML = renderLongDivisionGrid({
+          divisor: '8',
+          dividendCols: ['5', '5'],
+          quotientCols: ['', { t: '6', cls: 'text-kawaii-mintDark' }],
+          steps: [
+            { cols: [{ t: '4', cls: 'text-slate-400' }, { t: '8', cls: 'text-slate-400' }], underline: [0, 1] },
+            { cols: ['', { t: '7', cls: 'text-[#FF2E63]' }] }
+          ],
+          sizeClass: 'text-2xl text-kawaii-cocoa'
+        });
+      }
+    }
+
+    // ------------------------------------------
+    // 1. 主分頁切換控制
+    // ------------------------------------------
+    function switchTab(tabName) {
+      const sections = ['concepts', 'visualizer', 'quiz'];
+      const styles = {
+        concepts: {
+          active: 'tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-kawaii-pink text-white border-2 border-kawaii-pinkDark whitespace-nowrap',
+          inactive: 'tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-white text-kawaii-cocoa border-2 border-kawaii-pink whitespace-nowrap'
+        },
+        visualizer: {
+          active: 'tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-kawaii-yellow text-kawaii-cocoa border-2 border-amber-500 whitespace-nowrap',
+          inactive: 'tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-white text-kawaii-cocoa border-2 border-kawaii-yellow whitespace-nowrap'
+        },
+        quiz: {
+          active: 'tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-kawaii-mint text-white border-2 border-kawaii-mintDark whitespace-nowrap',
+          inactive: 'tab-btn kawaii-btn flex items-center gap-2.5 px-6 py-3 rounded-2xl font-black text-lg sm:text-xl bg-white text-kawaii-cocoa border-2 border-kawaii-mint whitespace-nowrap'
+        }
+      };
+
+      sections.forEach(sec => {
+        const el = document.getElementById(`section-${sec}`);
+        const btn = document.getElementById(`tab-btn-${sec}`);
+        if (sec === tabName) {
+          el.classList.remove('hidden');
+          btn.className = styles[sec].active;
+        } else {
+          el.classList.add('hidden');
+          btn.className = styles[sec].inactive;
+        }
+      });
+    }
+
+    // ------------------------------------------
+    // 2. 分頁 1：左側核心概念選項鍵切換控制
+    // ------------------------------------------
+    function switchConcept(conceptIdx) {
+      const navStyles = {
+        1: {
+          active: 'concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-kawaii-pinkLight border-kawaii-pink text-kawaii-cocoa',
+          inactive: 'concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-white border-slate-200 text-kawaii-cocoa hover:bg-kawaii-pinkLight/40'
+        },
+        2: {
+          active: 'concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-kawaii-skyLight border-kawaii-sky text-kawaii-cocoa',
+          inactive: 'concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-white border-slate-200 text-kawaii-cocoa hover:bg-kawaii-skyLight'
+        },
+        3: {
+          active: 'concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-kawaii-mintLight border-kawaii-mint text-kawaii-cocoa',
+          inactive: 'concept-nav-btn kawaii-btn w-full text-left p-4 sm:p-5 rounded-3xl border-3 transition-all flex items-center gap-4 bg-white border-slate-200 text-kawaii-cocoa hover:bg-kawaii-mintLight'
+        }
+      };
+
+      [1, 2, 3].forEach(idx => {
+        const panel = document.getElementById(`concept-panel-${idx}`);
+        const navBtn = document.getElementById(`concept-nav-${idx}`);
+        if (panel && navBtn) {
+          if (idx === conceptIdx) {
+            panel.classList.remove('hidden');
+            navBtn.className = navStyles[idx].active;
+          } else {
+            panel.classList.add('hidden');
+            navBtn.className = navStyles[idx].inactive;
+          }
+        }
+      });
+    }
+
+    // ------------------------------------------
+    // 3. 分頁 1：核心概念一「互動魔法棒」小數點移動器
+    // ------------------------------------------
+    const shiftDemos = [
+      {
+        orig: '4.8 ÷ 0.6',
+        scaled: '48 ÷ 6',
+        btnText: '同時 × 10（小數點右移 1 位）',
+        note: '💡 除數 0.6 有 1 位小數，所以兩邊同時 × 10，使除數變成整數 6！'
+      },
+      {
+        orig: '3.6 ÷ 0.15',
+        scaled: '360 ÷ 15',
+        btnText: '同時 × 100（小數點右移 2 位）',
+        note: '💡 除數 0.15 有 2 位小數，兩邊同時 × 100；3.6 右移 2 位不夠數位，末尾要補 0 變成 360！'
+      },
+      {
+        orig: '7 ÷ 0.25',
+        scaled: '700 ÷ 25',
+        btnText: '同時 × 100（小數點右移 2 位）',
+        note: '💡 除數 0.25 有 2 位小數，整數 7 乘以 100 會在末尾補兩個 0，變成 700 ÷ 25！'
+      }
+    ];
+
+    let currentShiftIdx = 0;
+    let isShifted = false;
+
+    function setShiftDemo(idx) {
+      currentShiftIdx = idx;
+      isShifted = false;
+      const demo = shiftDemos[idx];
+
+      document.querySelectorAll('.shift-preset-btn').forEach((btn, i) => {
+        if (i === idx) {
+          btn.className = 'shift-preset-btn kawaii-btn px-4 py-2.5 rounded-2xl text-base sm:text-lg font-black bg-kawaii-skyDark text-white border-2 border-sky-800';
+        } else {
+          btn.className = 'shift-preset-btn kawaii-btn px-4 py-2.5 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-sky';
+        }
+      });
+
+      document.getElementById('shift-orig').textContent = demo.orig;
+      const newEl = document.getElementById('shift-new');
+      newEl.textContent = '? ÷ ?';
+      newEl.className = 'text-3xl sm:text-4xl font-mono font-black text-slate-300 transition-all';
+      document.getElementById('shift-btn-text').textContent = demo.btnText;
+      document.getElementById('shift-note').textContent = demo.note;
+    }
+
+    function toggleShiftAnimation() {
+      const demo = shiftDemos[currentShiftIdx];
+      const newEl = document.getElementById('shift-new');
+      isShifted = !isShifted;
+
+      if (isShifted) {
+        newEl.textContent = demo.scaled;
+        newEl.className = 'text-3xl sm:text-4xl font-mono font-black text-kawaii-mintDark scale-105 transition-all';
+        document.getElementById('shift-btn-text').textContent = '還原算式（再試一次）';
+      } else {
+        newEl.textContent = '? ÷ ?';
+        newEl.className = 'text-3xl sm:text-4xl font-mono font-black text-slate-300 transition-all';
+        document.getElementById('shift-btn-text').textContent = demo.btnText;
+      }
+    }
+
+    // ------------------------------------------
+    // 4. 分頁 2：直式動態演示機資料與邏輯（全面使用嚴格位值對齊格網）
+    // ------------------------------------------
+    const visualizerCases = [
+      {
+        badge: '倍大與末尾補 0（參考圖三標準對齊）',
+        steps: [
+          {
+            title: '步驟 1：觀察除數小數位數',
+            desc: '題目是 3.6 ÷ 1.5。除數「1.5」有 1 位小數，所以我們把除數和被除數同時乘以 10（小數點向右移 1 位），使除數變成整數 15。',
+            tip: '3.6 × 10 = 36；1.5 × 10 = 15。新算式變成 36 ÷ 15。',
+            boardHTML: `
+              <div class="text-center space-y-4">
+                <div class="text-kawaii-yellow text-lg font-bold">原算式</div>
+                <div class="text-4xl sm:text-5xl font-mono font-black">3.6 ÷ 1.5</div>
+                <div class="inline-block bg-[#FF2E63] text-white px-4 py-1.5 rounded-full text-base font-black">
+                  除數有 1 位小數 ➔ 兩邊同時 × 10 ➔ 36 ÷ 15
+                </div>
+              </div>`
+          },
+          {
+            title: '步驟 2：先算整數部分 36 ÷ 15',
+            desc: '36 除以 15，商是 2（15 × 2 = 30），注意「2」必須嚴格對齊被除數的個位「6」！36 - 30 餘 6。',
+            tip: '位值對齊重點：30 寫在 36 正下方（3 對齊 3，0 對齊 6）。',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '15',
+              dividendCols: ['3', '6'],
+              quotientCols: ['', { t: '2', cls: 'text-kawaii-yellow' }],
+              steps: [
+                { cols: [{ t: '3', cls: 'text-white/60' }, { t: '0', cls: 'text-white/60' }], underline: [0, 1] },
+                { cols: ['', { t: '6', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          },
+          {
+            title: '步驟 3：有餘數，點小數點並補 0 繼續除',
+            desc: '個位除完仍有餘數 6，在被除數「6」右邊點上小數點並補「0」（變成 36.0），同時在商點上小數點，拉下 0 變成 60。',
+            tip: '商的小數點與被除數的小數點嚴格上下成一直線！',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '15',
+              dividendCols: ['3', '6', { t: '.', cls: 'text-[#FF8FA3]' }, { t: '0', cls: 'text-[#FF8FA3]' }],
+              quotientCols: ['', '2', { t: '.', cls: 'text-[#FF8FA3]' }, ''],
+              steps: [
+                { cols: [{ t: '3', cls: 'text-white/60' }, { t: '0', cls: 'text-white/60' }, '', ''], underline: [0, 3] },
+                { cols: ['', { t: '6', cls: 'text-kawaii-mint' }, '', { t: '0', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          },
+          {
+            title: '步驟 4：計算 60 ÷ 15 = 4，得出 2.4',
+            desc: '60 除以 15 剛好等於 4（15 × 4 = 60），「4」寫在商的十分位（嚴格對齊補上的 0），餘數為 0！',
+            tip: '驗算：2.4 × 1.5 = 3.6，所有位值上下對齊一目了然！',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '15',
+              dividendCols: ['3', '6', { t: '.', cls: 'text-[#FF8FA3]' }, { t: '0', cls: 'text-[#FF8FA3]' }],
+              quotientCols: ['', '2', { t: '.', cls: 'text-[#FF8FA3]' }, { t: '4', cls: 'text-kawaii-yellow' }],
+              steps: [
+                { cols: [{ t: '3', cls: 'text-white/60' }, { t: '0', cls: 'text-white/60' }, '', ''], underline: [0, 3] },
+                { cols: ['', '6', '', '0'] },
+                { cols: ['', { t: '6', cls: 'text-white/60' }, '', { t: '0', cls: 'text-white/60' }], underline: [1, 3] },
+                { cols: ['', '', '', { t: '0', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          }
+        ]
+      },
+      {
+        badge: '倍大後末尾補 0 除盡（1.26 ÷ 0.4）',
+        steps: [
+          {
+            title: '步驟 1：倍大除數成整數（× 10）',
+            desc: '題目是 1.26 ÷ 0.4。除數「0.4」有 1 位小數，兩邊同時 × 10，變成 12.6 ÷ 4。',
+            tip: '記住：只需要把「除數」變成整數即可，被除數 12.6 保留小數點！',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '4',
+              dividendCols: ['1', '2', '.', '6'],
+              quotientCols: ['', '3', '.', ''],
+              steps: [
+                { cols: [{ t: '1', cls: 'text-white/60' }, { t: '2', cls: 'text-white/60' }, '', ''], underline: [0, 3] },
+                { cols: ['', '', '', { t: '6', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          },
+          {
+            title: '步驟 2：除十分位 6 ÷ 4，餘下 2',
+            desc: '十分位的 6 除以 4，商「1」對齊十分位「6」，4 × 1 = 4，6 - 4 餘 2。',
+            tip: '因為還有餘數 2，我們需要在被除數百分位補 0 繼續除！',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '4',
+              dividendCols: ['1', '2', '.', '6', { t: '0', cls: 'text-[#FF8FA3]' }],
+              quotientCols: ['', '3', '.', { t: '1', cls: 'text-kawaii-yellow' }, ''],
+              steps: [
+                { cols: [{ t: '1', cls: 'text-white/60' }, { t: '2', cls: 'text-white/60' }, '', '', ''], underline: [0, 4] },
+                { cols: ['', '', '', '6', ''] },
+                { cols: ['', '', '', { t: '4', cls: 'text-white/60' }, ''], underline: [3, 4] },
+                { cols: ['', '', '', { t: '2', cls: 'text-kawaii-mint' }, { t: '0', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          },
+          {
+            title: '步驟 3：計算 20 ÷ 4 = 5，得出 3.15',
+            desc: '20 除以 4 剛好等於 5，寫在商的百分位（對齊補上的 0），餘數為 0。答案是 3.15！',
+            tip: '每個位值（十位、個位、十分位、百分位）上下整齊排列！',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '4',
+              dividendCols: ['1', '2', '.', '6', { t: '0', cls: 'text-[#FF8FA3]' }],
+              quotientCols: ['', '3', '.', '1', { t: '5', cls: 'text-kawaii-yellow' }],
+              steps: [
+                { cols: [{ t: '1', cls: 'text-white/60' }, { t: '2', cls: 'text-white/60' }, '', '', ''], underline: [0, 4] },
+                { cols: ['', '', '', '6', ''] },
+                { cols: ['', '', '', { t: '4', cls: 'text-white/60' }, ''], underline: [3, 4] },
+                { cols: ['', '', '', '2', '0'] },
+                { cols: ['', '', '', { t: '2', cls: 'text-white/60' }, { t: '0', cls: 'text-white/60' }], underline: [3, 4] },
+                { cols: ['', '', '', '', { t: '0', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          }
+        ]
+      },
+      {
+        badge: '應用題陷阱：餘數還原（5.5 ÷ 0.8）',
+        contextText: '有果汁 5.5 升，每 0.8 升裝成一瓶，最多可裝滿多少瓶？還剩下果汁多少升？',
+        steps: [
+          {
+            title: '步驟 1：理解題意並倍大除數（× 10）',
+            desc: '要求「5.5 升裡面有多少個 0.8 升」，列式為 5.5 ÷ 0.8。除數 0.8 有 1 位小數，兩邊同時 × 10 變成 55 ÷ 8。',
+            tip: '心裡記住：我們剛才把原數「倍大了 10 倍」！',
+            boardHTML: `
+              <div class="text-center space-y-4">
+                <div class="bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-base sm:text-lg text-pink-100 leading-relaxed">
+                  🧃 有果汁 <strong class="text-kawaii-yellow">5.5 升</strong>，每 <strong class="text-kawaii-yellow">0.8 升</strong> 裝成一瓶
+                </div>
+                <div class="text-3xl sm:text-4xl font-mono font-black">5.5 ÷ 0.8 <span class="text-kawaii-yellow">➔ (×10) ➔</span> 55 ÷ 8</div>
+                <div class="inline-block bg-[#FF2E63] text-white px-4 py-1 rounded-full text-base font-bold">⚠️ 記錄倍率：× 10</div>
+              </div>`
+          },
+          {
+            title: '步驟 2：計算整數商與直式餘數（嚴格對齊個位）',
+            desc: '55 ÷ 8，8 × 6 = 48。商「6」嚴格對齊個位「5」，55 - 48 = 7，餘數「7」也嚴格對齊個位！',
+            tip: '應用題問「最多可裝滿多少瓶」，商取整數 6 即可，不要補 0 繼續除！',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '8',
+              dividendCols: ['5', '5'],
+              quotientCols: ['', { t: '6', cls: 'text-kawaii-yellow' }],
+              steps: [
+                { cols: [{ t: '4', cls: 'text-white/60' }, { t: '8', cls: 'text-white/60' }], underline: [0, 1] },
+                { cols: ['', { t: '7', cls: 'text-[#FF8FA3]' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          },
+          {
+            title: '步驟 3：關鍵一步——餘數必須縮小還原（÷ 10）！',
+            desc: '因為第一步把算式倍大了 10 倍，直式餘下的「7」其實是 7 個 0.1 升，所以必須除以 10 還原：7 ÷ 10 = 0.7（升）。',
+            tip: '口訣：「商不變（仍是 6 瓶），餘數要還原（7 ÷ 10 = 0.7 升）！」',
+            boardHTML: `
+              <div class="text-center space-y-4">
+                <div class="text-lg font-bold text-kawaii-yellow">⚠️ 還原被倍大 10 倍的餘數</div>
+                <div class="p-5 rounded-3xl bg-[#FF2E63]/35 border-2 border-[#FF8FA3] space-y-2">
+                  <div class="text-base text-pink-200 font-bold">直式餘數 ÷ 10 ＝ 真正剩下的果汁</div>
+                  <div class="text-3xl sm:text-4xl font-mono font-black text-white">7 ÷ 10 = <span class="text-kawaii-yellow">0.7（升）</span></div>
+                </div>
+                <div class="text-base text-white/80">（商代表瓶數，倍大後保持不變，仍是 6 瓶）</div>
+              </div>`
+          },
+          {
+            title: '步驟 4：完整列式、直式與答句',
+            desc: '把直式結果寫成完整橫式與答句：5.5 ÷ 0.8 = 6（瓶）⋯⋯ 0.7（升）。最多可裝滿 6 瓶，還剩下果汁 0.7 升。',
+            tip: '驗算：6 瓶 × 0.8 升 + 0.7 升 = 4.8 + 0.7 = 5.5 升，分毫不差！',
+            boardHTML: `
+              <div class="w-full space-y-4">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                  <div class="bg-white/10 px-5 py-3 rounded-2xl border border-white/15">
+                    ${renderLongDivisionGrid({
+                      divisor: '8',
+                      dividendCols: ['5', '5'],
+                      quotientCols: ['', { t: '6', cls: 'text-kawaii-yellow' }],
+                      steps: [
+                        { cols: [{ t: '4', cls: 'text-white/60' }, { t: '8', cls: 'text-white/60' }], underline: [0, 1] },
+                        { cols: ['', { t: '7', cls: 'text-[#FF8FA3]' }] }
+                      ],
+                      sizeClass: 'text-2xl sm:text-3xl text-white'
+                    })}
+                  </div>
+                  <div class="text-left space-y-2">
+                    <div class="text-sm font-bold text-kawaii-yellow">完整橫式：</div>
+                    <div class="text-xl sm:text-2xl font-mono font-black text-white bg-white/10 px-4 py-2 rounded-2xl border border-white/20">
+                      5.5 ÷ 0.8 = <span class="text-kawaii-mint">6（瓶）</span>⋯⋯ <span class="text-kawaii-yellow">0.7（升）</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-kawaii-mint/20 border-2 border-kawaii-mint rounded-2xl px-4 py-3 text-center text-lg sm:text-xl font-black text-white">
+                  答：最多可裝滿 <span class="text-kawaii-yellow underline">6 瓶</span>，還剩下果汁 <span class="text-kawaii-yellow underline">0.7 升</span>。
+                </div>
+              </div>`
+          }
+        ]
+      },
+      {
+        badge: '商中間不夠除補 0（8.12 ÷ 4）',
+        steps: [
+          {
+            title: '步驟 1：先除整數部分（8 ÷ 4 = 2）',
+            desc: '題目是 8.12 ÷ 4。除數是整數 4。先算個位 8 ÷ 4 = 2，「2」嚴格對齊個位「8」，並點上小數點。',
+            tip: '8 - 8 = 0，把十分位的「1」拉下來。',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '4',
+              dividendCols: ['8', '.', '1', '2'],
+              quotientCols: [{ t: '2', cls: 'text-kawaii-yellow' }, '.', '', ''],
+              steps: [
+                { cols: [{ t: '8', cls: 'text-white/60' }, '', '', ''], underline: [0, 3] },
+                { cols: ['', '', { t: '1', cls: 'text-kawaii-mint' }, ''] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          },
+          {
+            title: '步驟 2：十分位「1」不夠除以 4，商必須補 0！',
+            desc: '拉下來的「1」比除數 4 小，不夠除！在商的十分位（對齊 1）寫「0」佔位，再把百分位的「2」拉下來變成 12。',
+            tip: '口訣：「拉下一位不夠除，商上補 0 再拉下一位！」',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '4',
+              dividendCols: ['8', '.', '1', '2'],
+              quotientCols: ['2', '.', { t: '0', cls: 'text-[#FF8FA3]' }, ''],
+              steps: [
+                { cols: [{ t: '8', cls: 'text-white/60' }, '', '', ''], underline: [0, 3] },
+                { cols: ['', '', { t: '1', cls: 'text-kawaii-mint' }, { t: '2', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          },
+          {
+            title: '步驟 3：計算 12 ÷ 4 = 3，得出 2.03',
+            desc: '12 ÷ 4 = 3，「3」寫在商的百分位（對齊 2），餘數為 0。所以 8.12 ÷ 4 = 2.03！',
+            tip: '若漏寫中間的 0 會變成 2.3，用 2.3 × 4 = 9.2 便能立刻發現錯誤！',
+            boardHTML: renderLongDivisionGrid({
+              divisor: '4',
+              dividendCols: ['8', '.', '1', '2'],
+              quotientCols: ['2', '.', { t: '0', cls: 'text-[#FF8FA3]' }, { t: '3', cls: 'text-kawaii-yellow' }],
+              steps: [
+                { cols: [{ t: '8', cls: 'text-white/60' }, '', '', ''], underline: [0, 3] },
+                { cols: ['', '', '1', '2'] },
+                { cols: ['', '', { t: '1', cls: 'text-white/60' }, { t: '2', cls: 'text-white/60' }], underline: [2, 3] },
+                { cols: ['', '', '', { t: '0', cls: 'text-kawaii-mint' }] }
+              ],
+              sizeClass: 'text-3xl sm:text-4xl text-white'
+            })
+          }
+        ]
+      }
+    ];
+
+    let visCaseIdx = 0;
+    let visStepIdx = 0;
+
+    function loadVisualizerCase(caseIdx) {
+      visCaseIdx = caseIdx;
+      visStepIdx = 0;
+      document.querySelectorAll('.vis-case-btn').forEach((btn, i) => {
+        if (i === caseIdx) {
+          btn.className = 'vis-case-btn kawaii-btn px-4 py-3 rounded-2xl text-base sm:text-lg font-black bg-kawaii-pink text-white border-2 border-kawaii-pinkDark';
+        } else {
+          btn.className = 'vis-case-btn kawaii-btn px-4 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-yellow';
+        }
+      });
+      renderVisualizer();
+    }
+
+    function stepVisualizer(delta) {
+      const total = visualizerCases[visCaseIdx].steps.length;
+      visStepIdx = Math.max(0, Math.min(total - 1, visStepIdx + delta));
+      renderVisualizer();
+    }
+
+    function renderVisualizer() {
+      const currentCase = visualizerCases[visCaseIdx];
+      const stepData = currentCase.steps[visStepIdx];
+      const total = currentCase.steps.length;
+
+      // 顯示或隱藏應用題情境橫幅
+      const ctxBanner = document.getElementById('vis-context-banner');
+      const ctxText = document.getElementById('vis-context-text');
+      if (ctxBanner && ctxText) {
+        if (currentCase.contextText) {
+          ctxText.textContent = currentCase.contextText;
+          ctxBanner.classList.remove('hidden');
+        } else {
+          ctxBanner.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('vis-badge').textContent = currentCase.badge;
+      document.getElementById('vis-step-counter').textContent = `步驟 ${visStepIdx + 1} / ${total}`;
+      document.getElementById('vis-board').innerHTML = stepData.boardHTML;
+      document.getElementById('vis-step-title').textContent = stepData.title;
+      document.getElementById('vis-step-desc').textContent = stepData.desc;
+      document.getElementById('vis-step-tip').textContent = stepData.tip;
+
+      document.getElementById('vis-prev-btn').disabled = (visStepIdx === 0);
+      document.getElementById('vis-next-btn').disabled = (visStepIdx === total - 1);
+
+      const dotsContainer = document.getElementById('vis-dots');
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('span');
+        dot.className = i === visStepIdx 
+          ? 'w-8 h-3 rounded-full bg-kawaii-yellow transition-all' 
+          : 'w-3 h-3 rounded-full bg-white/30 transition-all';
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    // ------------------------------------------
+    // 5. 分頁 3：隨機出題引擎與批改系統
+    // ------------------------------------------
+    let currentQuizMode = 'mixed';
+    let currentQuestion = null;
+    let questionCount = 0;
+    let correctCount = 0;
+    let streakCount = 0;
+
+    function cleanFloat(num) {
+      return Math.round(num * 1000000) / 1000000;
+    }
+
+    function setQuizMode(mode) {
+      currentQuizMode = mode;
+      const modeStyles = {
+        mixed: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-pink',
+        calc: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-sky',
+        round: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-purple-300',
+        word: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-white text-kawaii-cocoa border-2 border-kawaii-mint'
+      };
+      const activeModeStyles = {
+        mixed: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-kawaii-pink text-white border-2 border-kawaii-pinkDark',
+        calc: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-kawaii-skyDark text-white border-2 border-sky-800',
+        round: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-purple-600 text-white border-2 border-purple-800',
+        word: 'quiz-mode-btn kawaii-btn px-5 py-3 rounded-2xl text-base sm:text-lg font-black bg-kawaii-mintDark text-white border-2 border-emerald-900'
+      };
+
+      Object.keys(modeStyles).forEach(m => {
+        const btn = document.getElementById(`mode-${m}`);
+        if (btn) {
+          btn.className = (m === mode) ? activeModeStyles[m] : modeStyles[m];
+        }
+      });
+      generateNewQuestion();
+    }
+
+    function createCalcQuestion() {
+      const subTypes = ['scale_pad', 'small_dividend', 'mid_zero', 'end_zero'];
+      const chosen = subTypes[Math.floor(Math.random() * subTypes.length)];
+
+      if (chosen === 'scale_pad') {
+        const divisors = [0.12, 0.15, 0.25, 0.04, 0.05, 0.08];
+        const divisor = divisors[Math.floor(Math.random() * divisors.length)];
+        const quotient = Math.floor(Math.random() * 25) + 12;
+        const dividend = cleanFloat(divisor * quotient);
+        const scaledDividend = cleanFloat(dividend * 100);
+        const scaledDivisor = cleanFloat(divisor * 100);
+
+        return {
+          type: 'calc',
+          badge: '類型 A：倍大與補 0 計算',
+          text: `計算： ${dividend} ÷ ${divisor} = ?`,
+          subhint: '💡 提示：先數一數除數有幾多位小數，把兩邊同時倍大，使除數變成整數！',
+          ansSingle: quotient,
+          verticalHTML: `
+            <div class="text-sm text-kawaii-yellow font-bold mb-2">倍大（× 100）：${scaledDividend} ÷ ${scaledDivisor}</div>
+            <div class="flex justify-center py-2">${buildAutoLongDivisionHTML(dividend, divisor, 0, true)}</div>
+          `,
+          scaleNote: '除數有 2 位小數 ➔ 被除數與除數同時 × 100',
+          strategies: [
+            `觀察除數「${divisor}」，它有 2 位小數，因此必須將除數和被除數同時乘以 100，使除數變成整數「${scaledDivisor}」。`,
+            `被除數「${dividend}」乘以 100 後變成「${scaledDividend}」（小數點向右移 2 位，不足的數位補 0）。`,
+            `按整數除法計算 ${scaledDividend} ÷ ${scaledDivisor}，得出商為 ${quotient}。`
+          ]
+        };
+      } else if (chosen === 'small_dividend') {
+        const divisor = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9][Math.floor(Math.random() * 6)];
+        const quotient = [0.2, 0.3, 0.4, 0.6, 0.7, 0.8][Math.floor(Math.random() * 6)];
+        const dividend = cleanFloat(divisor * quotient);
+        const scaledDividend = cleanFloat(dividend * 10);
+        const scaledDivisor = cleanFloat(divisor * 10);
+
+        return {
+          type: 'calc',
+          badge: '類型 A：商個位補 0 計算',
+          text: `計算： ${dividend} ÷ ${divisor} = ?`,
+          subhint: '💡 提示：倍大後若被除數仍比除數小，記得在商的個位寫 0 並點小數點！',
+          ansSingle: quotient,
+          verticalHTML: `
+            <div class="text-sm text-kawaii-yellow font-bold mb-2">倍大（× 10）：${scaledDividend} ÷ ${scaledDivisor}</div>
+            <div class="flex justify-center py-2">${buildAutoLongDivisionHTML(dividend, divisor, 1, false)}</div>
+          `,
+          scaleNote: '除數有 1 位小數 ➔ 被除數與除數同時 × 10',
+          strategies: [
+            `除數「${divisor}」有 1 位小數，將兩數同時 × 10，使除數變成整數 ${scaledDivisor}，算式變成 ${scaledDividend} ÷ ${scaledDivisor}。`,
+            `因為「${scaledDividend}」比除數「${scaledDivisor}」小，個位不夠除，必須先在商的個位寫「0」並點上小數點。`,
+            `將 ${scaledDividend} 看作 ${Math.round(scaledDividend * 10)} 個十分之一除以 ${scaledDivisor}，得出答案 ${quotient}。`
+          ]
+        };
+      } else if (chosen === 'mid_zero') {
+        const intDivisor = [3, 4, 6, 7, 8][Math.floor(Math.random() * 5)];
+        const firstDigit = Math.floor(Math.random() * 3) + 1;
+        const lastDigit = Math.floor(Math.random() * 8) + 2;
+        const quotient = cleanFloat(firstDigit + lastDigit * 0.01);
+        const dividend = cleanFloat(intDivisor * quotient);
+
+        return {
+          type: 'calc',
+          badge: '類型 A：商中間補 0 陷阱',
+          text: `計算： ${dividend} ÷ ${intDivisor} = ?`,
+          subhint: '⚠️ 小心陷阱：十分位不夠除時，記得在商的十分位補 0 佔位！',
+          ansSingle: quotient,
+          verticalHTML: `
+            <div class="text-sm text-kawaii-yellow font-bold mb-2">除數已是整數，直接對齊小數點：</div>
+            <div class="flex justify-center py-2">${buildAutoLongDivisionHTML(dividend, intDivisor, 2, false)}</div>
+          `,
+          scaleNote: '除數已是整數 ➔ 直接對齊小數點計算',
+          strategies: [
+            `除數「${intDivisor}」已經是整數，直接列直式並對齊被除數的小數點。`,
+            `算完個位後，拉下十分位數字發現比 ${intDivisor} 小，不夠除！必須先在商的十分位寫「0」佔位。`,
+            `再拉下百分位數字組成兩位數除以 ${intDivisor}，得出 ${lastDigit}，合併答案為 ${quotient}。`
+          ]
+        };
+      } else {
+        const pairs = [
+          { a: 5, b: 2, q: 2.5, dp: 1 },
+          { a: 7, b: 4, q: 1.75, dp: 2 },
+          { a: 9, b: 4, q: 2.25, dp: 2 },
+          { a: 11, b: 4, q: 2.75, dp: 2 },
+          { a: 6, b: 5, q: 1.2, dp: 1 },
+          { a: 14, b: 8, q: 1.75, dp: 2 },
+          { a: 18, b: 8, q: 2.25, dp: 2 }
+        ];
+        const p = pairs[Math.floor(Math.random() * pairs.length)];
+        return {
+          type: 'calc',
+          badge: '類型 A：末尾補 0 繼續除',
+          text: `計算： ${p.a} ÷ ${p.b} = ?`,
+          subhint: '💡 提示：有餘數時，在被除數右下角點小數點並補 0 繼續除，直到除盡！',
+          ansSingle: p.q,
+          verticalHTML: `
+            <div class="text-sm text-kawaii-yellow font-bold mb-2">個位有餘數，添小數點及 0 繼續除：</div>
+            <div class="flex justify-center py-2">${buildAutoLongDivisionHTML(p.a, p.b, p.dp, false)}</div>
+          `,
+          scaleNote: '整數除法有餘數 ➔ 在被除數末尾補 .0 繼續除',
+          strategies: [
+            `先計算整數部分 ${p.a} ÷ ${p.b}，得出個位商後仍有餘數。`,
+            `在被除數「${p.a}」右邊點上小數點並補「0」（變成 ${p.a}.0），同時在商點上小數點。`,
+            `把餘數與補上的 0 合併繼續除以 ${p.b}（若仍有餘數則再補 0），直到餘數為 0，得出 ${p.q}。`
+          ]
+        };
+      }
+    }
+
+    function createRoundingQuestion() {
+      const placeType = Math.random() < 0.5 ? 'tenths' : 'hundredths';
+      const placeName = placeType === 'tenths' ? '十分位' : '百分位';
+      const calcToName = placeType === 'tenths' ? '百分位（2 位小數）' : '千分位（3 位小數）';
+      const decimals = placeType === 'tenths' ? 1 : 2;
+
+      const divisors = [0.3, 0.6, 0.7, 0.9, 1.1, 1.3, 3, 6, 7, 9];
+      let divisor = divisors[Math.floor(Math.random() * divisors.length)];
+      let dividend = cleanFloat((Math.floor(Math.random() * 25) + 4) / (Math.random() < 0.5 ? 1 : 10));
+      
+      while ((dividend * 1000) % (divisor * 1000) === 0) {
+        dividend = cleanFloat(dividend + 0.1);
+      }
+
+      const exactVal = dividend / divisor;
+      const factor = Math.pow(10, decimals);
+      const roundedAns = Math.round((exactVal + Number.EPSILON) * factor) / factor;
+      
+      const extraDecimals = decimals + 1;
+      const truncatedStr = exactVal.toFixed(extraDecimals + 1).slice(0, exactVal.toFixed(extraDecimals + 1).length - 1);
+      const scaleMult = divisor < 1 ? 10 : 1;
+
+      return {
+        type: 'round',
+        badge: `類型 B：取近似值（${placeName}）`,
+        text: `計算： ${dividend} ÷ ${divisor} ≈ ? （答案取至${placeName}）`,
+        subhint: `💡 提示：要取至${placeName}，直式只需計算到${calcToName}即可進行四捨五入！`,
+        ansSingle: roundedAns,
+        verticalHTML: `
+          <div class="text-sm text-kawaii-yellow font-bold mb-2">直式算至${calcToName}：</div>
+          <div class="flex justify-center py-1">${buildAutoLongDivisionHTML(dividend, divisor, extraDecimals, false)}</div>
+          <div class="text-center text-base font-bold text-kawaii-mint pt-2 border-t border-white/15">
+            四捨五入取至${placeName}：≈ ${roundedAns.toFixed(decimals)}
+          </div>
+        `,
+        scaleNote: scaleMult > 1 ? '除數有 1 位小數 ➔ 兩邊同時 × 10 後計算' : '除數為整數 ➔ 算至指定小數位後多一位',
+        strategies: [
+          scaleMult > 1 ? `先把除數 ${divisor} 和被除數 ${dividend} 同時 × 10，使除數變成整數 ${cleanFloat(divisor * 10)}。` : `除數 ${divisor} 是整數，可直接列直式計算。`,
+          `題目要求答案取至「${placeName}」，所以我們在直式中只需除到「${calcToName}」（即 ${truncatedStr}...）便可以停下來。`,
+          `觀察最後一位數字進行四捨五入，得出近似值為 ${roundedAns.toFixed(decimals)}。`
+        ]
+      };
+    }
+
+    function createWordQuestion() {
+      const scenarios = [
+        {
+          item: '士多啤梨果汁',
+          totalUnit: '升',
+          packAction: '每 {div} 升裝成一瓶，最多可裝滿多少瓶？還剩下果汁多少升？',
+          qLabel: '最多可裝滿：',
+          qUnit: '瓶',
+          rLabel: '還剩下果汁（記得還原！）：',
+          rUnit: '升',
+          divisors: [0.4, 0.6, 0.7, 0.8, 0.9]
+        },
+        {
+          item: '粉紅緞帶',
+          totalUnit: '米',
+          packAction: '每 {div} 米剪成一段用來綁蝴蝶結，最多可剪成多少段？還剩下緞帶多少米？',
+          qLabel: '最多可剪成：',
+          qUnit: '段',
+          rLabel: '還剩下緞帶（記得還原！）：',
+          rUnit: '米',
+          divisors: [0.3, 0.4, 0.6, 0.7, 0.8]
+        },
+        {
+          item: '珍珠白米',
+          totalUnit: '公斤',
+          packAction: '每 {div} 公斤裝成一袋，最多可裝滿多少袋？還剩下白米多少公斤？',
+          qLabel: '最多可裝滿：',
+          qUnit: '袋',
+          rLabel: '還剩下白米（記得還原！）：',
+          rUnit: '公斤',
+          divisors: [0.5, 0.6, 0.8, 0.9, 1.2]
+        },
+        {
+          item: '零用錢',
+          totalUnit: '元',
+          packAction: '每本可愛貼紙簿售 {div} 元，她最多可買貼紙簿多少本？還剩下多少元？',
+          qLabel: '最多可買：',
+          qUnit: '本',
+          rLabel: '還剩下（記得還原！）：',
+          rUnit: '元',
+          divisors: [2.4, 3.5, 4.2, 4.5, 6.5]
+        }
+      ];
+
+      const sc = scenarios[Math.floor(Math.random() * scenarios.length)];
+      const divisor = sc.divisors[Math.floor(Math.random() * sc.divisors.length)];
+      const quotient = Math.floor(Math.random() * 7) + 4;
+      
+      const maxRemSteps = Math.round(divisor * 10) - 1;
+      const remSteps = Math.floor(Math.random() * maxRemSteps) + 1;
+      const trueRemainder = cleanFloat(remSteps / 10);
+      
+      const totalAmount = cleanFloat(divisor * quotient + trueRemainder);
+      const scaledTotal = cleanFloat(totalAmount * 10);
+      const scaledDivisor = cleanFloat(divisor * 10);
+      const scaledRemainder = remSteps;
+
+      const questionSentence = sc.item === '零用錢'
+        ? `小櫻有零用錢 ${totalAmount} 元，${sc.packAction.replace('{div}', divisor)}`
+        : `甜品店有${sc.item} ${totalAmount} ${sc.totalUnit}，${sc.packAction.replace('{div}', divisor)}`;
+
+      return {
+        type: 'word',
+        badge: '類型 C：含餘數應用題（餘數還原）',
+        text: questionSentence,
+        subhint: '🚨 高危提醒：利用倍大計算後，商不變，但「餘數」必須縮小還原！',
+        qLabel: sc.qLabel,
+        qUnit: sc.qUnit,
+        rLabel: sc.rLabel,
+        rUnit: sc.rUnit,
+        ansQuotient: quotient,
+        ansRemainder: trueRemainder,
+        verticalHTML: `
+          <div class="text-sm text-kawaii-yellow font-bold mb-2">倍大（× 10）：${scaledTotal} ÷ ${scaledDivisor}</div>
+          <div class="flex justify-center py-1">${buildAutoLongDivisionHTML(totalAmount, divisor, 0, true)}</div>
+          <div class="text-sm font-bold text-[#FF8FA3] pt-2 border-t border-white/15">
+            餘數還原（÷ 10）：${scaledRemainder} ÷ 10 = <span class="text-kawaii-yellow underline">${trueRemainder} ${sc.rUnit}</span>
+          </div>
+        `,
+        scaleNote: '倍大 10 倍計算 ➔ 最後餘數必須 ÷ 10 還原！',
+        strategies: [
+          `根據題意列出除法算式：${totalAmount} ÷ ${divisor}。`,
+          `為使除數變成整數，將被除數和除數同時 × 10，變成「${scaledTotal} ÷ ${scaledDivisor}」。`,
+          `計算出整數商為「${quotient}」，表示最多可分成 ${quotient} ${sc.qUnit}；直式個位底下餘下「${scaledRemainder}」。`,
+          `【最關鍵一步】因為之前把數量倍大了 10 倍，餘數「${scaledRemainder}」必須除以 10 還原，得出真正剩下 ${trueRemainder} ${sc.rUnit}！`
+        ]
+      };
+    }
+
+    function generateNewQuestion() {
+      questionCount++;
+      let chosenType = currentQuizMode;
+      if (chosenType === 'mixed') {
+        const types = ['calc', 'round', 'word'];
+        chosenType = types[Math.floor(Math.random() * types.length)];
+      }
+
+      if (chosenType === 'calc') {
+        currentQuestion = createCalcQuestion();
+      } else if (chosenType === 'round') {
+        currentQuestion = createRoundingQuestion();
+      } else {
+        currentQuestion = createWordQuestion();
+      }
+
+      document.getElementById('q-type-badge').textContent = currentQuestion.badge;
+      document.getElementById('q-number').textContent = `題目 #${questionCount}`;
+      document.getElementById('q-text').textContent = currentQuestion.text;
+      
+      const hintEl = document.getElementById('q-subhint');
+      if (currentQuestion.subhint) {
+        hintEl.textContent = currentQuestion.subhint;
+        hintEl.classList.remove('hidden');
+      } else {
+        hintEl.classList.add('hidden');
+      }
+
+      const singleGroup = document.getElementById('input-single-group');
+      const wordGroup = document.getElementById('input-word-group');
+      const singleInput = document.getElementById('ans-single');
+      const qInput = document.getElementById('ans-quotient');
+      const rInput = document.getElementById('ans-remainder');
+
+      singleInput.value = '';
+      qInput.value = '';
+      rInput.value = '';
+      singleInput.disabled = false;
+      qInput.disabled = false;
+      rInput.disabled = false;
+
+      if (currentQuestion.type === 'word') {
+        singleGroup.classList.add('hidden');
+        singleInput.required = false;
+        wordGroup.classList.remove('hidden');
+        qInput.required = true;
+        rInput.required = true;
+
+        document.getElementById('label-quotient').textContent = currentQuestion.qLabel;
+        document.getElementById('unit-quotient').textContent = currentQuestion.qUnit;
+        document.getElementById('label-remainder').textContent = currentQuestion.rLabel;
+        document.getElementById('unit-remainder').textContent = currentQuestion.rUnit;
+      } else {
+        wordGroup.classList.add('hidden');
+        qInput.required = false;
+        rInput.required = false;
+        singleGroup.classList.remove('hidden');
+        singleInput.required = true;
+      }
+
+      document.getElementById('btn-submit-ans').classList.remove('hidden');
+      document.getElementById('btn-next-q').classList.add('hidden');
+      document.getElementById('feedback-panel').classList.add('hidden');
+    }
+
+    function handleQuizSubmit(e) {
+      e.preventDefault();
+      if (!currentQuestion) return;
+
+      let isCorrect = false;
+      let userSummary = '';
+      let correctSummary = '';
+
+      if (currentQuestion.type === 'word') {
+        const userQ = parseInt(document.getElementById('ans-quotient').value, 10);
+        const userR = cleanFloat(parseFloat(document.getElementById('ans-remainder').value));
+        
+        const isQRight = (userQ === currentQuestion.ansQuotient);
+        const isRRight = (Math.abs(userR - currentQuestion.ansRemainder) < 0.0001);
+        isCorrect = isQRight && isRRight;
+
+        userSummary = `${userQ} ${currentQuestion.qUnit}，餘 ${userR} ${currentQuestion.rUnit}`;
+        correctSummary = `${currentQuestion.ansQuotient} ${currentQuestion.qUnit}，餘 ${currentQuestion.ansRemainder} ${currentQuestion.rUnit}`;
+        
+        if (isQRight && !isRRight && Math.abs(userR - cleanFloat(currentQuestion.ansRemainder * 10)) < 0.0001) {
+          correctSummary += ` （⚠️ 你填了倍大後的餘數 ${userR}，忘記除以 10 還原了！）`;
+        }
+
+        document.getElementById('ans-quotient').disabled = true;
+        document.getElementById('ans-remainder').disabled = true;
+      } else {
+        const userVal = cleanFloat(parseFloat(document.getElementById('ans-single').value));
+        isCorrect = (Math.abs(userVal - currentQuestion.ansSingle) < 0.0001);
+        userSummary = `${userVal}`;
+        correctSummary = `${currentQuestion.ansSingle}`;
+        document.getElementById('ans-single').disabled = true;
+      }
+
+      if (isCorrect) {
+        correctCount++;
+        streakCount++;
+      } else {
+        streakCount = 0;
+      }
+      document.getElementById('stat-correct').textContent = correctCount;
+      document.getElementById('stat-streak').textContent = streakCount;
+
+      const banner = document.getElementById('feedback-banner');
+      if (isCorrect) {
+        banner.className = 'p-5 rounded-3xl mb-6 flex items-center gap-4 bg-kawaii-mintLight border-3 border-kawaii-mint text-kawaii-cocoa';
+        banner.innerHTML = `
+          <div class="w-12 h-12 rounded-2xl bg-kawaii-mint text-white flex items-center justify-center text-2xl shrink-0 shadow-sm">
+            🎉
+          </div>
+          <div>
+            <div class="font-black text-xl sm:text-2xl text-kawaii-mintDark">太棒了！完全答對！</div>
+            <div class="text-lg text-kawaii-cocoa mt-0.5">你的答案：<strong>${correctSummary}</strong></div>
+          </div>`;
+      } else {
+        banner.className = 'p-5 rounded-3xl mb-6 flex items-center gap-4 bg-kawaii-pinkLight border-3 border-kawaii-pink text-kawaii-cocoa';
+        banner.innerHTML = `
+          <div class="w-12 h-12 rounded-2xl bg-[#FF2E63] text-white flex items-center justify-center text-2xl shrink-0 shadow-sm">
+            💪
+          </div>
+          <div>
+            <div class="font-black text-xl sm:text-2xl text-[#FF2E63]">差一點點，看看下面的解題小秘訣吧！</div>
+            <div class="text-lg text-kawaii-cocoa mt-0.5">
+              你的作答：<span class="line-through text-kawaii-cocoaLight">${userSummary}</span> ｜ 正確答案：<strong class="text-[#FF2E63] underline">${correctSummary}</strong>
+            </div>
+          </div>`;
+      }
+
+      const vBox = document.getElementById('feedback-vertical-box');
+      vBox.innerHTML = currentQuestion.verticalHTML;
+
+      document.getElementById('feedback-scale-tag').innerHTML = `⚡ ${currentQuestion.scaleNote}`;
+
+      const sList = document.getElementById('feedback-strategy-list');
+      sList.innerHTML = currentQuestion.strategies
+        .map(st => `<li>${st}</li>`)
+        .join('');
+
+      document.getElementById('btn-submit-ans').classList.add('hidden');
+      document.getElementById('btn-next-q').classList.remove('hidden');
+      document.getElementById('feedback-panel').classList.remove('hidden');
+    }
+
+    // ------------------------------------------
+    // 6. 頁面載入初始化
+    // ------------------------------------------
+    window.onload = function () {
+      initConceptGrids();
+      renderVisualizer();
+      generateNewQuestion();
+    };
+  </script>
+</body>
+</html>
